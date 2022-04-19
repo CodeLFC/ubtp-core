@@ -2,7 +2,9 @@ package gaozhi.online.ubtb.core.net;
 
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.SocketAddress;
+import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -62,10 +64,11 @@ public class UBTPSocket implements UDPSocket.PDUConsumer {
     //线程安全的消费者集合
     private final Set<UMsgConsumer> consumerSet;
 
-    public UBTPSocket(int port,int mtu) {
+    public UBTPSocket(int port,int mtu) throws UnknownHostException {
         udpSocket = new UDPSocket(port, mtu);
         udpSocket.addConsumer(this);
         consumerSet = Collections.newSetFromMap(new ConcurrentHashMap<>());
+        setIp(InetAddress.getLocalHost().getHostAddress());
     }
 
     /**
